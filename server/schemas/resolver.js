@@ -38,7 +38,7 @@ const { signToken } = require("../utils/auth");
     addUser: async (parent, args) => {
         const user = await User.Create(args);
         const token = signToken(user);
-        
+        console.log(token, user);
         return { token, user };
     },
     saveBook: async (parent, body, context) => {
