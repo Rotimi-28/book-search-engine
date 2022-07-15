@@ -13,7 +13,7 @@ const { signToken } = require("../utils/auth");
             throw new AuthenticationError("No logged in");
         },
         //get all user
-        user: async () => {
+        users: async () => {
             return User.find()
               .select("-_ -password")
               .populate("saveBooks")
@@ -21,8 +21,10 @@ const { signToken } = require("../utils/auth");
     },
     Mutation: {
         login: async (parent, { email, password }) => {
-            const user = await User.findOne({ email });
+            console.log(email, password);
+            const user = await User.findOne({ username: email });
 
+            console.log(user);
             if (!user) {
                 throw new AuthenticationError("Incorrect credentials");
 
@@ -33,38 +35,39 @@ const { signToken } = require("../utils/auth");
             }
             const token = signToken(user);
             return { token, user };
+        },
+        addUser: async (parent, args) => {
+            const user = await User.create(args);
+            const token = signToken(user);
+            console.log(token, user);
+            return { token, user };
+        },
+        saveBook: async (parent, body, context) => {
+            if (context.user) {
+    
+                const user = await User.findOneAndUpdate(
+                    { _id: context.user._id },
+                    { $addToset: {saveBooks: body } },
+                    { new: true, runValidators: false}
+                );
+                return user;
+            }
+            throw new AuthenticationError("You need to be logged in!");
+        },
+        removeBook: async (parent, args, context) => {
+            if (context.user) {
+    
+                const user = await User.findOneAndUpdate(
+                    { _id: context.user._id },
+                    { $pull: { saveBooks: args } },
+                    { new: true }
+                );
+                return user;
+            }
+            throw new AuthenticationError("You need to logged in!");
         }
     },
-    addUser: async (parent, args) => {
-        const user = await User.Create(args);
-        const token = signToken(user);
-        console.log(token, user);
-        return { token, user };
-    },
-    saveBook: async (parent, body, context) => {
-        if (context.user) {
-
-            const user = await User.findOneAndUpdate(
-                { _id: context.user._id },
-                { $addToset: {saveBooks: body } },
-                { new: true, runValidators: false}
-            );
-            return user;
-        }
-        throw new AuthenticationError("You need to be logged in!");
-    },
-    removeBook: async (parent, args, context) => {
-        if (context.user) {
-
-            const user = await User.findOneAndUpdate(
-                { _id: context.user._id },
-                { $pull: { saveBooks: args } },
-                { new: true }
-            );
-            return user;
-        }
-        throw new AuthenticationError("You need to logged in!");
-    }
+    
  };
 
  module.exports = resolvers;

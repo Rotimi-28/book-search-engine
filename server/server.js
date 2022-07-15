@@ -1,9 +1,9 @@
 const express = require("express");
 const path = require("path");
 const db = require("./config/connection");
-const routes = require("./routes");
+//const routes = require("./routes");
 const { ApolloServer } = require("apollo-server-express");
-const { typeDefs, resolver } = require("./schemas");
+const { typeDefs, resolvers } = require("./schemas");
 const { authMidleware } = require("./utils/auth");
 
 const app = express();
@@ -14,24 +14,26 @@ app.use(express.json());
 
 const server = new ApolloServer({
   typeDefs,
-  resolver,
+  resolvers,
   context: authMidleware,
 });
 const startServer = async () => {
-  await server.start()
+  await server.start();
   server.applyMiddleware({ app });
- 
 
-db.once("open", () => {
-  app.listen(PORT, () => console.log(`🌍 Now listening on localhost:${PORT}`));
-});
-}
+  db.once("open", () => {
+    app.listen(PORT, () => {
+      console.log(`🌍 Now listening on localhost:${PORT}`)
+
+      
+    });
+  });
+};
 //integrate our apollo server & with d Express application as middleware
 //server.applyMiddleware({ app });
-
 
 // if we're in production, serve client/build as static assets
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../client/build")));
 }
- startServer();
+startServer();
