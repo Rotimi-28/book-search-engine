@@ -8,7 +8,7 @@ const { signToken } = require("../utils/auth");
                 const userData = await User.findOne({ _id: context.user._id })
                 .select("-_v -password")
 
-                return userData
+                return userData;
             }
             throw new AuthenticationError("No logged in");
         },
