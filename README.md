@@ -35,6 +35,6 @@ This application was built with severals technologies, and its  used validation 
 
 ## ScreenShot
 
+![]<img width="1440" alt="Screen Shot 2022-08-04 at 7 34 35 PM" src="https://user-images.githubusercontent.com/96090900/182992476-27bf3f64-afcf-4fa2-bdba-12de2da56277.png">
 
-
-
+![]<img width="1440" alt="Screen Shot 2022-08-04 at 7 34 23 PM" src="https://user-images.githubusercontent.com/96090900/182992558-b5c86f7a-68a7-41fb-b22b-7c2fb89d9ed5.png">
