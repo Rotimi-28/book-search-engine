@@ -12,6 +12,7 @@ const SignupForm = () => {
   const [validated] = useState(false);
   // set state for alert
   const [showAlert, setShowAlert] = useState(false);
+
   const [addUser] = useMutation(ADD_USER);
 
   const handleInputChange = (event) => {
@@ -31,12 +32,9 @@ const SignupForm = () => {
 
     try {
       const { data } = await addUser({
-        variables: {...userFormData}
-      });
-      console.log(data);
-      
-
-      
+        variables: { ...userFormData},
+      })
+      console.log('data', data)
       Auth.login(data.addUser.token);
     } catch (err) {
       console.error(err);
@@ -69,7 +67,7 @@ const SignupForm = () => {
             value={userFormData.username}
             required
           />
-          <Form.Control.Feedback type='invalid'>Username is required!</Form.Control.Feedback>
+          <Form.Control.Feedback type='invalid'>Username is Required!</Form.Control.Feedback>
         </Form.Group>
 
         <Form.Group>
@@ -107,5 +105,4 @@ const SignupForm = () => {
     </>
   );
 };
-
 export default SignupForm;
